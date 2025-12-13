@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	VERSION string = "v0.1"
+	VERSION string = "v0.1.1"
 )
 
 func printHelp() {

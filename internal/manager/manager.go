@@ -35,11 +35,11 @@ func (m *Manager) Check() {
 			}
 			b := buf[0]
 			if b == '\r' || b == '\n' {
-				fmt.Println("\033[1D✅")
+				fmt.Print("\033[1D✅\r\n")
 				break
 			}
 			if b == 0x1b {
-				fmt.Println("\033[1D❌")
+				fmt.Print("\033[1D❌\r\n")
 				return
 			}
 		}
