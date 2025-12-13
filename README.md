@@ -1,6 +1,14 @@
 # hato
 This is a CLI CheckList tool.
 
+# How to install
+If you have `go`:
+```bash
+$ go install github.com/midry3/hato
+```
+
+or download binary from [here](https://github.com/midry3/hato).
+
 # Usage
 ```bash
 # Initialize

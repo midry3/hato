@@ -1,8 +1,9 @@
 # https://github.com/midry3/hato
 
 checklist:
-- Current branch is main?
-- Updated version?
+  - Current branch is main?
+  - Updated version?
 
 actions:
-- task
+  - git pull origin main
+  - git push origin main

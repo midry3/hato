@@ -10,8 +10,12 @@ import (
 	"github.com/midry3/hato/internal/manager"
 )
 
+const (
+	VERSION string = "v0.1"
+)
+
 func printHelp() {
-	fmt.Println("[\033[36mhato\033[0m]\n" +
+	fmt.Println("[\033[36mhato\033[0m] " + VERSION + "\n" +
 		"This is a CLI CheckList tool.\n\n" +
 
 		"\033[35mUsage\033[0m: hato <Action> [Options]\n\n" +
