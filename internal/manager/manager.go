@@ -27,7 +27,7 @@ func (m *Manager) Check() {
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
 	buf := make([]byte, 1)
 	for n, c := range m.GetList() {
-		fmt.Printf("[%d]: %s => ?", n+1, c)
+		fmt.Printf("[\033[36m%d\033[0m]: %s => ?", n+1, c)
 		for {
 			_, err := os.Stdin.Read(buf)
 			if err != nil {
