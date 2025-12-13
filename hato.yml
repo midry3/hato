@@ -1,0 +1,8 @@
+# https://github.com/midry3/hato
+
+checklist:
+- Current branch is main?
+- Updated version?
+
+actions:
+- task

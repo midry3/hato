@@ -1,0 +1,43 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  APP_NAME: hato
+  DIST_DIR: dist
+
+tasks:
+  default:
+    desc: Build for all platforms
+    cmds:
+      - task: build:all
+
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -rf {{.DIST_DIR}}
+
+  build:all:
+    desc: Build for all supported OS/ARCH
+    deps:
+      - build:linux
+      - build:windows
+      - build:mac
+
+  build:linux:
+    desc: Build for Linux
+    cmds:
+      - GOOS=linux GOARCH=amd64 go build -o {{.DIST_DIR}}/{{.APP_NAME}}_linux_amd64
+      - GOOS=linux GOARCH=arm64 go build -o {{.DIST_DIR}}/{{.APP_NAME}}_linux_arm64
+
+  build:windows:
+    desc: Build for Windows
+    cmds:
+      - GOOS=windows GOARCH=amd64 go build -o {{.DIST_DIR}}/{{.APP_NAME}}_windows_amd64.exe
+      - GOOS=windows GOARCH=arm64 go build -o {{.DIST_DIR}}/{{.APP_NAME}}_windows_arm64.exe
+
+  build:mac:
+    desc: Build for macOS
+    cmds:
+      - GOOS=darwin GOARCH=amd64 go build -o {{.DIST_DIR}}/{{.APP_NAME}}_darwin_amd64
+      - GOOS=darwin GOARCH=arm64 go build -o {{.DIST_DIR}}/{{.APP_NAME}}_darwin_arm64
