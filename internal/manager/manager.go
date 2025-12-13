@@ -11,10 +11,6 @@ import (
 	"golang.org/x/term"
 )
 
-const (
-	DEFAULT string = "_"
-)
-
 type Manager struct {
 	Config *data.Config
 }

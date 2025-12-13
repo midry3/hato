@@ -47,7 +47,7 @@ And result will be like this:
 $ hato
 [1]: Check A => ✅
 [2]: Check B => ✅
-All checklists are ok!
+All of checklist are ok!
 
 Running 1/2: `echo Action1` ...
 Action1
