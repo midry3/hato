@@ -45,7 +45,7 @@ func (m *Manager) Check() {
 		}
 	}
 	term.Restore(int(os.Stdin.Fd()), oldState)
-	fmt.Println("All checklists are ok!")
+	fmt.Println("All of checklist are ok!")
 	n := len(m.Config.Actions)
 	if 0 < n {
 		for i, c := range m.Config.Actions {
