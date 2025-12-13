@@ -4,6 +4,7 @@ checklist:
   - Current branch is main?
   - Have you merged from dev branch?
   - Updated version?
+  - README is ok?
 
 actions:
   - git pull origin main

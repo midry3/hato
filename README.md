@@ -7,7 +7,7 @@ If you have `go`:
 $ go install github.com/midry3/hato
 ```
 
-or download binary from [here](https://github.com/midry3/hato).
+or download binary from [here](https://github.com/midry3/hato/releases/latest).
 
 # Usage
 ```bash
@@ -65,6 +65,7 @@ Please edit `hato.yml`.
 
 checklist:
   - Current branch is main?
+  - Merged from dev?
   - Updated version?
 
 actions:
