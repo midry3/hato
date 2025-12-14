@@ -57,7 +57,7 @@ func LoadCheckList() Checklists {
 
 func NewChecklist(name string) {
 	ls := LoadCheckList()
-	*ls[name] = Data{}
+	ls[name] = &Data{}
 	ls.Save()
 }
 

@@ -1,7 +1,14 @@
 # https://github.com/midry3/hato
 
-default:
+commit:
+  aliases: []
+  checklist:
+  - Checked the stages?
+  - Are you ok this commit message?
+  actions:
+  - git commit -m %1
   nargs: 1
+default:
   aliases:
   - push
   checklist:
@@ -11,11 +18,10 @@ default:
   actions:
   - git pull origin %1
   - git push origin %1
-
-commit:
   nargs: 1
+test:
+  aliases: []
   checklist:
-  - Checked the stages?
-  - Are you ok this commit message?
-  actions:
-  - git commit -m %1
+  - Test Check A
+  actions: []
+  nargs: 0
