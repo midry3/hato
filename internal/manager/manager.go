@@ -30,6 +30,12 @@ func (m *Manager) Check() {
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
 	buf := make([]byte, 1)
 	for n, c := range m.GetList() {
+		for n, i := range m.Args {
+			reg1 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%%d`, n+1), 0)
+			reg2 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%\(%d\)`, n+1), 0)
+			c, _ = reg1.Replace(c, i, 0, -1)
+			c, _ = reg2.Replace(c, i, 0, -1)
+		}
 		fmt.Printf("[\033[36m%d\033[0m]: %s => ?", n+1, c)
 		for {
 			_, err := os.Stdin.Read(buf)

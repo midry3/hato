@@ -117,6 +117,7 @@ commit:
   nargs: 1
   default:
     - Checked stages?
+    - Are you ok this commit message?
   actions:
     - git commit -m %1
 ```

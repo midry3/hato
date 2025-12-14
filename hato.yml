@@ -16,5 +16,6 @@ commit:
   nargs: 1
   checklist:
   - Checked the stages?
+  - Are you ok this commit message?
   actions:
   - git commit -m %1
