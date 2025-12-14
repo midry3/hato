@@ -104,20 +104,19 @@ This checklist needs just 2 arguments.
 # https://github.com/midry3/hato
 
 default:
+  nargs: 1
   aliases:
     - push
   checklist:
-    - Current branch is main?
-    - Merged from dev?
-    - Updated version?
+    - Checked stages?
   actions:
-    - git pull origin main
-    - git push origin main
+    - git pull origin %1
+    - git push origin %1
 
 commit:
   nargs: 1
   default:
     - Checked stages?
   actions:
-    - git commit -m "%1"
+    - git commit -m %1
 ```

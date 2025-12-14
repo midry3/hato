@@ -1,16 +1,16 @@
 # https://github.com/midry3/hato
 
 default:
+  nargs: 1
   aliases:
   - push
   checklist:
-  - Current branch is main?
-  - Have you merged from dev branch?
+  - Current branch is %1?
   - Updated version?
   - README is ok?
   actions:
-  - git pull origin main
-  - git push origin main
+  - git pull origin %1
+  - git push origin %1
 
 commit:
   nargs: 1
