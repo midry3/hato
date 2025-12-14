@@ -14,15 +14,20 @@ or download binary from [here](https://github.com/midry3/hato/releases/latest).
 # Initialize
 $ hato
 
-# Add a checklist
-$ hato add Check A
-$ hato add Check B
+# Add an item of checklist
+$ hato --add Check A
+$ hato --add Check B
+
+# Create `test` checklist and add an item of checklist
+$ hato test --add Test Check A
+$ hato test --add Test Check B
 
 # Check the list
 $ hato
-# or
-$ hato check
+$ hato test
 ```
+
+Please edit `hato.yml` on current directory.
 
 The way of checking the list is this:
 - If ok, `Enter` and next.
@@ -34,16 +39,32 @@ If all checklists are ok, and if you set actions, run the actions.
 ```yaml:hato.yml
 # https://github.com/midry3/hato
 
-checklist:
-  - Check A
-  - Check B
+default:
+  nargs: 0
+  aliases:
+    - Alias1
+    - Alias2
+  checklist:
+    - Check A
+    - Check B
+  actions:
+    - echo Action1
+    - echo Action2
 
-actions:
-  - echo Action1
-  - echo Action2
+checklist_name:
+  nargs: 2
+  aliases:
+    - Alias3
+  checklist:
+    - Check C
+    - Check D
+  actions:
+    - echo %1 %%1   # You can recieve an argument by %position and escape by %%position
+    - echo %(2)
 ```
+
 And result will be like this:
-```bash:result
+```bash
 $ hato
 [1]: Check A => ✅
 [2]: Check B => ✅
@@ -58,17 +79,45 @@ Action2
 ✅All actions have been completed!
 ```
 
+```bash
+$ hato checklist_name Value1 Value2
+[1]: Check C => ✅
+[2]: Check D => ✅
+All of checklist are ok!
+
+Running 1/2: `echo Value1 %%1` ...
+Value1 %%1
+
+Running 2/2: `echo Value2` ...
+Value2
+
+✅All actions have been completed!
+```
+
+```bash
+$ hato Alias3
+This checklist needs just 2 arguments.
+```
+
 # Example
-Please edit `hato.yml`.
 ```yaml:hato.yml
 # https://github.com/midry3/hato
 
-checklist:
-  - Current branch is main?
-  - Merged from dev?
-  - Updated version?
+default:
+  aliases:
+    - push
+  checklist:
+    - Current branch is main?
+    - Merged from dev?
+    - Updated version?
+  actions:
+    - git pull origin main
+    - git push origin main
 
-actions:
-  - git pull origin main
-  - git push origin main
+commit:
+  nargs: 1
+  default:
+    - Checked stages?
+  actions:
+    - git commit -m "%1"
 ```

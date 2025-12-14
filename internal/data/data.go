@@ -3,6 +3,7 @@ package data
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/goccy/go-yaml"
@@ -15,14 +16,19 @@ var (
 const (
 	TARGETFILE string = "hato.yml"
 	HEADER     string = "# https://github.com/midry3/hato"
+	DEFAULT    string = "default"
 )
 
-type Config struct {
+type Data struct {
+	Aliases   []string
 	CheckList []string
 	Actions   []string
+	NArgs     int
 }
 
-func (c *Config) Save() {
+type Checklists map[string]*Data
+
+func (c *Checklists) Save() {
 	b, err := yaml.Marshal(c)
 	var buf bytes.Buffer
 	if err == nil {
@@ -35,12 +41,12 @@ func (c *Config) Save() {
 	}
 }
 
-func LoadCheckList() Config {
+func LoadCheckList() Checklists {
 	f, err := os.ReadFile(TARGETFILE)
 	if err != nil {
-		return Config{[]string{}, []string{}}
+		log.Fatal(err)
 	}
-	var res Config
+	var res Checklists
 	err = yaml.Unmarshal(f, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stdout, yaml.FormatError(err, true, true))
@@ -49,13 +55,23 @@ func LoadCheckList() Config {
 	return res
 }
 
+func NewChecklist(name string) {
+	ls := LoadCheckList()
+	*ls[name] = Data{}
+	ls.Save()
+}
+
 func init() {
 	_, err := os.Stat(TARGETFILE)
 	if os.IsNotExist(err) {
-		os.WriteFile(TARGETFILE, []byte(HEADER+`
+		os.WriteFile(TARGETFILE, []byte(fmt.Sprintf(`%s
 
-checklist: []
-actions: []`), 0655)
+%s:
+  default: true
+    aliases: []
+	nargs: 0
+    checklist: []
+    actions: []`, HEADER, DEFAULT)), 0655)
 		fmt.Println("\033[32mInitialized\033[0m: \"hato.yml\"")
 		IsInilialized = true
 	}

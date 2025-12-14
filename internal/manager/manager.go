@@ -4,18 +4,25 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
-	"strings"
+	"slices"
+
+	"github.com/dlclark/regexp2"
 
 	"github.com/midry3/hato/internal/data"
 	"golang.org/x/term"
 )
 
 type Manager struct {
-	Config *data.Config
+	Data data.Checklists
+	Name string
+	Args []string
 }
 
 func (m *Manager) Check() {
+	if len(m.Args) != m.Data[m.Name].NArgs {
+		fmt.Fprintf(os.Stderr, "This checklist needs just \033[33m%d\033[0m arguments.\n", m.Data[m.Name].NArgs)
+		os.Exit(1)
+	}
 	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
 	if err != nil {
 		log.Fatal(err)
@@ -42,15 +49,17 @@ func (m *Manager) Check() {
 	}
 	term.Restore(int(os.Stdin.Fd()), oldState)
 	fmt.Println("All of checklist are ok!")
-	n := len(m.Config.Actions)
+	n := len(m.Data[m.Name].Actions)
 	if 0 < n {
-		for i, c := range m.Config.Actions {
-			cmd := strings.Fields(c)
-			p := exec.Command(cmd[0], cmd[1:]...)
-			p.Stdout = os.Stdout
-			p.Stderr = os.Stderr
+		for i, c := range m.Data[m.Name].Actions {
+			for n, i := range m.Args {
+				reg1 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%%d`, n+1), 0)
+				reg2 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%\(%d\)`, n+1), 0)
+				c, _ = reg1.Replace(c, i, 0, -1)
+				c, _ = reg2.Replace(c, i, 0, -1)
+			}
 			fmt.Printf("\n\033[36mRunning \033[32m%d\033[0m/\033[32m%d\033[0m: `%s` ...\n", i+1, n, c)
-			if p.Run() != nil {
+			if RunCmd(c) != nil {
 				fmt.Fprintf(os.Stderr, "\033[31mFaild action\033[0m: `%s`\n", c)
 				return
 			}
@@ -60,21 +69,37 @@ func (m *Manager) Check() {
 }
 
 func (m *Manager) Add(content string) {
-	m.Config.CheckList = append(m.Config.CheckList, content)
-	m.Config.Save()
+	m.Data[m.Name].CheckList = append(m.Data[m.Name].CheckList, content)
+	m.Data.Save()
 }
 
 func (m *Manager) Remove(n int) {
-	m.Config.CheckList = append(m.Config.CheckList[:n], m.Config.CheckList[n+1:]...)
+	m.Data[m.Name].CheckList = append(m.Data[m.Name].CheckList[:n], m.Data[m.Name].CheckList[n+1:]...)
 }
 
 func (m *Manager) GetList() []string {
-	return m.Config.CheckList
+	return m.Data[m.Name].CheckList
 }
 
-func CreateManager() Manager {
-	cfg := data.LoadCheckList()
-	return Manager{
-		&cfg,
+func CreateManager(name string) (Manager, error) {
+	ls := data.LoadCheckList()
+	_, ok := ls[name]
+	if ok {
+		return Manager{
+			ls,
+			name,
+			[]string{},
+		}, nil
+	} else {
+		for k, v := range ls {
+			if slices.Contains(v.Aliases, name) {
+				return Manager{
+					ls,
+					k,
+					[]string{},
+				}, nil
+			}
+		}
+		return Manager{}, fmt.Errorf("Not found.\n")
 	}
 }

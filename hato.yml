@@ -1,11 +1,20 @@
 # https://github.com/midry3/hato
 
-checklist:
+default:
+  aliases:
+  - push
+  checklist:
   - Current branch is main?
   - Have you merged from dev branch?
   - Updated version?
   - README is ok?
-
-actions:
+  actions:
   - git pull origin main
   - git push origin main
+
+commit:
+  nargs: 1
+  checklist:
+  - Checked the stages?
+  actions:
+  - git commit -m %1
