@@ -4,6 +4,7 @@ commit:
   aliases: []
   checklist:
   - Checked the stages?
+  - Removed test debug code?
   - Are you ok this commit message?
   actions:
   - git commit -m %1
@@ -19,9 +20,3 @@ default:
   - git pull origin %1
   - git push origin %1
   nargs: 1
-test:
-  aliases: []
-  checklist:
-  - Test Check A
-  actions: []
-  nargs: 0
