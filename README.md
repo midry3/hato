@@ -56,10 +56,11 @@ checklist_name:
   aliases:
     - Alias3
   checklist:
-    - Check C
-    - Check D
+    # You can recieve an argument by %position
+    - Value1 is "%1", ok?
+    - Value2 is "%2", ok?
   actions:
-    - echo %1 %%1   # You can recieve an argument by %position and escape by %%position
+    - echo %1
     - echo %(2)
 ```
 
@@ -80,16 +81,16 @@ Action2
 ```
 
 ```bash
-$ hato checklist_name Value1 Value2
-[1]: Check C => ✅
-[2]: Check D => ✅
+$ hato checklist_name 123 abc
+[1]: Value1 is "123", ok? => ✅
+[2]: Value2 is "abc", ok? => ✅
 All of checklist are ok!
 
-Running 1/2: `echo Value1 %%1` ...
-Value1 %%1
+Running 1/2: `echo 123` ...
+123
 
-Running 2/2: `echo Value2` ...
-Value2
+Running 2/2: `echo abc` ...
+abc
 
 ✅All actions have been completed!
 ```
@@ -104,11 +105,15 @@ This checklist needs just 2 arguments.
 # https://github.com/midry3/hato
 
 default:
-  nargs: 1
-  aliases:
-    - push
   checklist:
-    - Checked stages?
+    - Are you happy?
+
+push:
+  nargs: 1
+  checklist:
+    - Current branch is %1?
+    - Updated version?
+    - README is ok?
   actions:
     - git pull origin %1
     - git push origin %1

@@ -1,22 +1,24 @@
 # https://github.com/midry3/hato
 
-commit:
-  aliases: []
-  checklist:
-  - Checked the stages?
-  - Removed test debug code?
-  - Are you ok this commit message?
-  actions:
-  - git commit -m %1
-  nargs: 1
 default:
-  aliases:
-  - push
   checklist:
-  - Current branch is %1?
-  - Updated version?
-  - README is ok?
-  actions:
-  - git pull origin %1
-  - git push origin %1
+    - Are you happy?
+
+push:
   nargs: 1
+  checklist:
+    - Current branch is %1?
+    - Updated version?
+    - README is ok?
+  actions:
+    - git pull origin %1
+    - git push origin %1
+
+commit:
+  nargs: 1
+  default:
+    - Checked the stages?
+    - Removed test debug codes?
+    - Are you ok this commit message?
+  actions:
+    - git commit -m %1
