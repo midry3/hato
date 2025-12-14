@@ -69,7 +69,7 @@ func init() {
 %s:
   default: true
     aliases: []
-	nargs: 0
+    nargs: 0
     checklist: []
     actions: []`, HEADER, DEFAULT)), 0655)
 		fmt.Println("\033[32mInitialized\033[0m: \"hato.yml\"")
