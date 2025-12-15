@@ -49,6 +49,7 @@ default:
   aliases:
     - Alias1
     - Alias2
+  inform:
   checklist:
     - Check A
     - Check B
@@ -60,6 +61,9 @@ checklist_name:
   nargs: 2
   aliases:
     - Alias3
+  inform:
+    - echo Information1
+    - echo Information2
   checklist:
     # You can recieve an argument by %position
     - Value1 is "%1", ok?
@@ -78,7 +82,6 @@ All of checklist are ok!
 
 Running 1/2: `echo Action1` ...
 Action1
-
 Running 2/2: `echo Action2` ...
 Action2
 
@@ -87,15 +90,18 @@ Action2
 
 ```bash
 $ hato checklist_name 123 abc
+――――――――――――――――――――――――――――Information――――――――――――――――――――――――――――――――――――――――――
+Information1
+Information2
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 [1]: Value1 is "123", ok? => ✅
 [2]: Value2 is "abc", ok? => ✅
 All of checklist are ok!
 
 Running 1/2: `echo 123` ...
-123
-
+%1
 Running 2/2: `echo abc` ...
-abc
+%(2)
 
 ✅All actions have been completed!
 ```
@@ -115,6 +121,8 @@ default:
 
 push:
   nargs: 1
+  aliases:
+    - p
   checklist:
     - Current branch is %1?
     - Updated version?
@@ -125,7 +133,11 @@ push:
 
 commit:
   nargs: 1
-  default:
+  aliases:
+    - c
+  inform:
+    - git status
+  checklist:
     - Checked the stages?
     - Removed test debug codes?
     - Are you ok this commit message?
