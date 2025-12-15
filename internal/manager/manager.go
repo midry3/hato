@@ -57,6 +57,7 @@ func (m *Manager) Check() {
 	fmt.Println("All of checklist are ok!")
 	n := len(m.Data[m.Name].Actions)
 	if 0 < n {
+		fmt.Println()
 		for i, c := range m.Data[m.Name].Actions {
 			for n, i := range m.Args {
 				reg1 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%%d`, n+1), 0)
@@ -64,7 +65,7 @@ func (m *Manager) Check() {
 				c, _ = reg1.Replace(c, i, 0, -1)
 				c, _ = reg2.Replace(c, i, 0, -1)
 			}
-			fmt.Printf("\n\033[36mRunning \033[32m%d\033[0m/\033[32m%d\033[0m: `%s` ...\n", i+1, n, c)
+			fmt.Printf("\033[36mRunning \033[32m%d\033[0m/\033[32m%d\033[0m: `%s` ...\n", i+1, n, c)
 			if RunCmd(c) != nil {
 				fmt.Fprintf(os.Stderr, "\033[31mFaild action\033[0m: `%s`\n", c)
 				return

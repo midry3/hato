@@ -4,6 +4,19 @@ default:
   checklist:
     - Are you happy?
 
+build:
+  actions:
+      - GOOS=linux GOARCH=amd64 go build -o dist/hato_linux_amd64
+      - GOOS=linux GOARCH=arm64 go build -o dist/hato_linux_arm64
+      - GOOS=darwin GOARCH=amd64 go build -o dist/hato_darwin_amd64
+      - GOOS=darwin GOARCH=arm64 go build -o dist/hato_darwin_arm64
+      - GOOS=windows GOARCH=amd64 go build -o dist/hato_windows_amd64.exe
+      - GOOS=windows GOARCH=arm64 go build -o dist/hato_windows_arm64.exe
+
+clean:
+  actions:
+    - rm -rf dist
+
 push:
   nargs: 1
   checklist:
