@@ -29,7 +29,7 @@ push:
 
 commit:
   nargs: 1
-  default:
+  checklist:
     - Checked the stages?
     - Removed test debug codes?
     - Are you ok this commit message?
