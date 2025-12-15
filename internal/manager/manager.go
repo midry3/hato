@@ -41,7 +41,7 @@ func (m *Manager) Check() {
 		}
 		fmt.Printf("%sInformation%s\r\n", strings.Repeat("―", (width-11)/2), strings.Repeat("―", (width-11)/2))
 		for _, c := range m.Data[m.Name].Inform {
-			RunCmd(c)
+			RunCmd(m.applyFormat(c))
 		}
 		fmt.Println(strings.Repeat("―", width))
 	}
@@ -76,7 +76,7 @@ func (m *Manager) Check() {
 		fmt.Println()
 		for i, c := range m.Data[m.Name].Actions {
 			fmt.Printf("\033[36mRunning \033[32m%d\033[0m/\033[32m%d\033[0m: `%s` ...\n", i+1, n, m.applyFormat(c))
-			if RunCmd(c) != nil {
+			if RunCmd(m.applyFormat(c)) != nil {
 				fmt.Fprintf(os.Stderr, "\033[31mFaild action\033[0m: `%s`\n", c)
 				return
 			}
