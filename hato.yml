@@ -29,6 +29,10 @@ push:
 
 commit:
   nargs: 1
+  aliases:
+    - c
+  inform:
+    - git status
   checklist:
     - Checked the stages?
     - Removed test debug codes?

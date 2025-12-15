@@ -21,6 +21,7 @@ const (
 
 type Data struct {
 	Aliases   []string
+	Inform    []string
 	CheckList []string
 	Actions   []string
 	NArgs     int

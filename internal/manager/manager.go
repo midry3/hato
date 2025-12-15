@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"slices"
+	"strings"
 
 	"github.com/dlclark/regexp2"
 
@@ -18,10 +19,31 @@ type Manager struct {
 	Args []string
 }
 
+func (m *Manager) applyFormat(s string) string {
+	for n, i := range m.Args {
+		reg1 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%%d`, n+1), 0)
+		reg2 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%\(%d\)`, n+1), 0)
+		s, _ = reg1.Replace(s, i, 0, -1)
+		s, _ = reg2.Replace(s, i, 0, -1)
+	}
+	return s
+}
+
 func (m *Manager) Check() {
 	if len(m.Args) != m.Data[m.Name].NArgs {
 		fmt.Fprintf(os.Stderr, "This checklist needs just \033[33m%d\033[0m arguments.\n", m.Data[m.Name].NArgs)
 		os.Exit(1)
+	}
+	if 0 < len(m.Data[m.Name].Inform) {
+		width, _, err := term.GetSize(int(os.Stdout.Fd()))
+		if err != nil {
+			width = 80
+		}
+		fmt.Printf("%sInformation%s\r\n", strings.Repeat("―", (width-11)/2), strings.Repeat("―", (width-11)/2))
+		for _, c := range m.Data[m.Name].Inform {
+			RunCmd(c)
+		}
+		fmt.Println(strings.Repeat("―", width))
 	}
 	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
 	if err != nil {
@@ -30,13 +52,7 @@ func (m *Manager) Check() {
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
 	buf := make([]byte, 1)
 	for n, c := range m.GetList() {
-		for n, i := range m.Args {
-			reg1 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%%d`, n+1), 0)
-			reg2 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%\(%d\)`, n+1), 0)
-			c, _ = reg1.Replace(c, i, 0, -1)
-			c, _ = reg2.Replace(c, i, 0, -1)
-		}
-		fmt.Printf("[\033[36m%d\033[0m]: %s => ?", n+1, c)
+		fmt.Printf("[\033[36m%d\033[0m]: %s => ?", n+1, m.applyFormat(c))
 		for {
 			_, err := os.Stdin.Read(buf)
 			if err != nil {
@@ -59,13 +75,7 @@ func (m *Manager) Check() {
 	if 0 < n {
 		fmt.Println()
 		for i, c := range m.Data[m.Name].Actions {
-			for n, i := range m.Args {
-				reg1 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%%d`, n+1), 0)
-				reg2 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%\(%d\)`, n+1), 0)
-				c, _ = reg1.Replace(c, i, 0, -1)
-				c, _ = reg2.Replace(c, i, 0, -1)
-			}
-			fmt.Printf("\033[36mRunning \033[32m%d\033[0m/\033[32m%d\033[0m: `%s` ...\n", i+1, n, c)
+			fmt.Printf("\033[36mRunning \033[32m%d\033[0m/\033[32m%d\033[0m: `%s` ...\n", i+1, n, m.applyFormat(c))
 			if RunCmd(c) != nil {
 				fmt.Fprintf(os.Stderr, "\033[31mFaild action\033[0m: `%s`\n", c)
 				return
