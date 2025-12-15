@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"slices"
 
 	"github.com/goccy/go-yaml"
 )
@@ -63,16 +64,18 @@ func NewChecklist(name string) {
 }
 
 func init() {
-	_, err := os.Stat(TARGETFILE)
-	if os.IsNotExist(err) {
-		os.WriteFile(TARGETFILE, []byte(fmt.Sprintf(`%s
+	if !slices.Contains(os.Args, "-h") && !slices.Contains(os.Args, "--help") {
+		_, err := os.Stat(TARGETFILE)
+		if os.IsNotExist(err) {
+			os.WriteFile(TARGETFILE, []byte(fmt.Sprintf(`%s
 
 %s:
   aliases: []
   nargs: 0
   checklist: []
   actions: []`, HEADER, DEFAULT)), 0655)
-		fmt.Println("\033[32mInitialized\033[0m: \"hato.yml\"")
-		IsInilialized = true
+			fmt.Println("\033[32mInitialized\033[0m: \"hato.yml\"")
+			IsInilialized = true
+		}
 	}
 }
