@@ -55,5 +55,5 @@ chmod +x "$DEST/hato"
 echo Installed to "'\033[32m$DEST\033[0m'"
 case ":$PATH:" in
   *":$DEST:"*) ;;
-  *) echo "You should add '$DEST' to \033[33m\$PATH\033[0m" ;;
+  *) echo "\033[31mNOTE\033[0m: You should add '$DEST' to \033[33m\$PATH\033[0m" ;;
 esac
