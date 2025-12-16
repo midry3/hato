@@ -52,7 +52,7 @@ esac
 FILE="https://github.com/midry3/hato/releases/latest/download/hato_${OS}_${CPU}"
 curl -Lo "$DEST/hato" $FILE
 chmod +x "$DEST/hato"
-printf "Installed to \"'\033[32m$DEST\033[0m'\"\n"
+printf "Installed to '\033[32m$DEST\033[0m'\n"
 case ":$PATH:" in
   *":$DEST:"*) ;;
   *) printf "\033[31mNOTE\033[0m: You should add '$DEST' to \033[33m\$PATH\033[0m\n" ;;
