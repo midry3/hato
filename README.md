@@ -9,7 +9,7 @@ $ go install github.com/midry3/hato@latest
 
 Linux, Mac:
 ```bash
-$ curl -L https://raw.githubusercontent.com/midry3/hato/main/install.sh | sh
+$ curl https://raw.githubusercontent.com/midry3/hato/main/install.sh | sh
 ```
 
 or download binary from [here](https://github.com/midry3/hato/releases/latest).
