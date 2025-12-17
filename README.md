@@ -99,9 +99,9 @@ Information2
 All of checklist are ok!
 
 Running 1/2: `echo 123` ...
-%1
+123
 Running 2/2: `echo abc` ...
-%(2)
+abc
 
 ✅All actions have been completed!
 ```
