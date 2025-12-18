@@ -23,8 +23,8 @@ func (m *Manager) applyFormat(s string) string {
 	for n, i := range m.Args {
 		reg1 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%%d`, n+1), 0)
 		reg2 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%\(%d\)`, n+1), 0)
-		s, _ = reg1.Replace(s, i, 0, -1)
-		s, _ = reg2.Replace(s, i, 0, -1)
+		s, _ = reg1.Replace(s, "\""+i+"\"", 0, -1)
+		s, _ = reg2.Replace(s, "\""+i+"\"", 0, -1)
 	}
 	return s
 }
@@ -45,35 +45,40 @@ func (m *Manager) Check() {
 		}
 		fmt.Println(strings.Repeat("―", width))
 	}
-	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer term.Restore(int(os.Stdin.Fd()), oldState)
-	buf := make([]byte, 1)
-	for n, c := range m.GetList() {
-		fmt.Printf("[\033[36m%d\033[0m]: %s => ?", n+1, m.applyFormat(c))
-		for {
-			_, err := os.Stdin.Read(buf)
-			if err != nil {
-				log.Fatal(err)
-			}
-			b := buf[0]
-			if b == '\r' || b == '\n' {
-				fmt.Print("\033[1D✅\r\n")
-				break
-			}
-			if b == 0x1b {
-				fmt.Print("\033[1D❌\r\n")
-				return
+	list := m.GetList()
+	if 0 < len(list) {
+		oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer term.Restore(int(os.Stdin.Fd()), oldState)
+		buf := make([]byte, 1)
+		for n, c := range list {
+			fmt.Printf("[\033[36m%d\033[0m]: %s => ?", n+1, m.applyFormat(c))
+			for {
+				_, err := os.Stdin.Read(buf)
+				if err != nil {
+					log.Fatal(err)
+				}
+				b := buf[0]
+				if b == '\r' || b == '\n' {
+					fmt.Print("\033[1D✅\r\n")
+					break
+				}
+				if b == 0x1b {
+					fmt.Print("\033[1D❌\r\n")
+					return
+				}
 			}
 		}
+		term.Restore(int(os.Stdin.Fd()), oldState)
+		fmt.Println("All of checklist are ok!")
 	}
-	term.Restore(int(os.Stdin.Fd()), oldState)
-	fmt.Println("All of checklist are ok!")
 	n := len(m.Data[m.Name].Actions)
 	if 0 < n {
-		fmt.Println()
+		if 0 < len(list) {
+			fmt.Println()
+		}
 		for i, c := range m.Data[m.Name].Actions {
 			fmt.Printf("\033[36mRunning \033[32m%d\033[0m/\033[32m%d\033[0m: `%s` ...\n", i+1, n, m.applyFormat(c))
 			if RunCmd(m.applyFormat(c)) != nil {

@@ -19,7 +19,7 @@ type ArgInfo struct {
 }
 
 const (
-	VERSION string     = "v1.0.0"
+	VERSION string     = "v1.1.0"
 	ADD     ActionType = iota
 	LIST
 	CHECK
