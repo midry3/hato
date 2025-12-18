@@ -1,6 +1,7 @@
 # https://github.com/midry3/hato
 
 default:
+  nargs: 1
   checklist:
     - Are you happy?
 

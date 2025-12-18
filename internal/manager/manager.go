@@ -23,6 +23,16 @@ func (m *Manager) applyFormat(s string) string {
 	for n, i := range m.Args {
 		reg1 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%%d`, n+1), 0)
 		reg2 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%\(%d\)`, n+1), 0)
+		s, _ = reg1.Replace(s, i, 0, -1)
+		s, _ = reg2.Replace(s, i, 0, -1)
+	}
+	return s
+}
+
+func (m *Manager) applyCmdFormat(s string) string {
+	for n, i := range m.Args {
+		reg1 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%%d`, n+1), 0)
+		reg2 := regexp2.MustCompile(fmt.Sprintf(`(?<!%%)%%\(%d\)`, n+1), 0)
 		s, _ = reg1.Replace(s, "\""+i+"\"", 0, -1)
 		s, _ = reg2.Replace(s, "\""+i+"\"", 0, -1)
 	}
@@ -80,8 +90,9 @@ func (m *Manager) Check() {
 			fmt.Println()
 		}
 		for i, c := range m.Data[m.Name].Actions {
-			fmt.Printf("\033[36mRunning \033[32m%d\033[0m/\033[32m%d\033[0m: `%s` ...\n", i+1, n, m.applyFormat(c))
-			if RunCmd(m.applyFormat(c)) != nil {
+			c = m.applyCmdFormat(c)
+			fmt.Printf("\033[36mRunning \033[32m%d\033[0m/\033[32m%d\033[0m: `%s` ...\n", i+1, n, c)
+			if RunCmd(c) != nil {
 				fmt.Fprintf(os.Stderr, "\033[31mFaild action\033[0m: `%s`\n", c)
 				return
 			}
