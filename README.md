@@ -12,6 +12,11 @@ Linux, Mac:
 $ curl https://raw.githubusercontent.com/midry3/hato/main/install.sh | sh
 ```
 
+Windows:
+```bat
+> winget install --id Midry.hato
+```
+
 or download binary from [here](https://github.com/midry3/hato/releases/latest).
 
 # Usage
