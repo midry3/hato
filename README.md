@@ -12,6 +12,11 @@ Linux, Mac:
 $ curl https://raw.githubusercontent.com/midry3/hato/main/install.sh | sh
 ```
 
+Windows:
+```bat
+> winget install --id Midry.hato
+```
+
 or download binary from [here](https://github.com/midry3/hato/releases/latest).
 
 # Usage
@@ -99,9 +104,9 @@ Information2
 All of checklist are ok!
 
 Running 1/2: `echo 123` ...
-%1
+123
 Running 2/2: `echo abc` ...
-%(2)
+abc
 
 ✅All actions have been completed!
 ```
