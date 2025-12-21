@@ -3,15 +3,9 @@ package data
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os"
-	"slices"
 
 	"github.com/goccy/go-yaml"
-)
-
-var (
-	IsInilialized bool = false
 )
 
 const (
@@ -46,7 +40,8 @@ func (c *Checklists) Save() {
 func LoadCheckList() Checklists {
 	f, err := os.ReadFile(TARGETFILE)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 	var res Checklists
 	err = yaml.Unmarshal(f, &res)
@@ -63,19 +58,17 @@ func NewChecklist(name string) {
 	ls.Save()
 }
 
-func init() {
-	if !slices.Contains(os.Args, "-h") && !slices.Contains(os.Args, "--help") {
-		_, err := os.Stat(TARGETFILE)
-		if os.IsNotExist(err) {
-			os.WriteFile(TARGETFILE, []byte(fmt.Sprintf(`%s
+func Inilialize() {
+	if _, err := os.Stat(TARGETFILE); err == nil {
+		fmt.Fprintln(os.Stderr, "`hato.yml` already exists.")
+	} else {
+		os.WriteFile(TARGETFILE, []byte(fmt.Sprintf(`%s
 
 %s:
   aliases: []
   nargs: 0
   checklist: []
   actions: []`, HEADER, DEFAULT)), 0655)
-			fmt.Println("\033[32mInitialized\033[0m: \"hato.yml\"")
-			IsInilialized = true
-		}
+		fmt.Println("\033[32mInitialized\033[0m: \"hato.yml\"")
 	}
 }

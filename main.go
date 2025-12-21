@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"slices"
 	"strings"
@@ -33,7 +32,8 @@ func printHelp() {
 		"\033[35mUsage\033[0m: hato <Target> [Options]\n\n" +
 
 		"[\033[32mOptions\033[0m]\n" +
-		`  -a / --add		Add checkList.
+		`  -i / --init		Create hato.yml
+  -a / --add		Add checkList.
   -l / --list		Show the checklist.
   -c / --check		Check the list.
 
@@ -46,6 +46,9 @@ If you want more information, plese visit this: https://github.com/midry3/hato`)
 func argCheck() ArgInfo {
 	if slices.Contains(os.Args, "-h") || slices.Contains(os.Args, "--help") {
 		printHelp()
+	} else if slices.Contains(os.Args, "-i") || slices.Contains(os.Args, "--init") {
+		data.Inilialize()
+		os.Exit(0)
 	}
 	action_specified := false
 	res := ArgInfo{}
@@ -94,12 +97,7 @@ func main() {
 			fmt.Fprintln(os.Stderr, "`\033[33mdefault\033[0m` was not found.")
 			os.Exit(1)
 		}
-		if 0 < len(m.GetList()) {
-			m.Check()
-			return
-		} else if !data.IsInilialized {
-			printHelp()
-		}
+		m.Check()
 		return
 	}
 	args := argCheck()
@@ -110,7 +108,7 @@ func main() {
 			fmt.Printf("\033[36mNew Checklist\033[0m: `%s`\n", args.TargetName)
 			m, err = manager.CreateManager(args.TargetName)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Fprintln(os.Stderr, err)
 			}
 		} else {
 			fmt.Fprintf(os.Stderr, "Checklist `\033[33m%s\033[0m` was not found.\n", args.TargetName)
