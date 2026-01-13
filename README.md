@@ -1,5 +1,5 @@
 # hato
-This is a CLI CheckList tool.
+This is a CLI Checklist tool and task runner.
 
 # How to install
 If you have `go`:
