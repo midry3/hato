@@ -22,7 +22,7 @@ or download binary from [here](https://github.com/midry3/hato/releases/latest).
 # Usage
 ```bash
 # Initialize
-$ hato
+$ hato --init
 
 # Add an item of checklist
 $ hato --add Check A
