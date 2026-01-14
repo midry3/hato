@@ -6,7 +6,7 @@ If you have `go`:
 ```bash
 $ go install github.com/midry3/hato@latest
 ```
-s
+
 Linux, Mac:
 ```bash
 $ curl https://raw.githubusercontent.com/midry3/hato/main/install.sh | sh
