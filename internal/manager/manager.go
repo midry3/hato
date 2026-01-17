@@ -39,6 +39,24 @@ func (m *Manager) applyCmdFormat(s string) string {
 	return s
 }
 
+func (m *Manager) ShowAllChecklists() {
+	keys := []string{}
+	for key := range m.Data {
+		keys = append(keys, key)
+	}
+	slices.Sort(keys)
+	for n, k := range keys {
+		v := m.Data[k]
+		fmt.Printf("[%d] \033[33m%s\033[0m", n+1, k)
+		if 0 < len(v.Aliases) {
+			fmt.Print(", ")
+			fmt.Printf("\033[33m%s\033[0m", strings.Join(v.Aliases, ", "))
+		}
+		fmt.Printf(": needs \033[36m%d\033[0m arguments.\n", v.NArgs)
+		n++
+	}
+}
+
 func (m *Manager) Check() {
 	if len(m.Args) != m.Data[m.Name].NArgs {
 		fmt.Fprintf(os.Stderr, "This checklist needs just \033[33m%d\033[0m arguments.\n", m.Data[m.Name].NArgs)

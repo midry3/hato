@@ -18,10 +18,11 @@ type ArgInfo struct {
 }
 
 const (
-	VERSION string     = "v1.1.0"
+	VERSION string     = "v1.2.0"
 	ADD     ActionType = iota
 	LIST
 	CHECK
+	CHECKLISTS
 	HELP
 )
 
@@ -35,7 +36,7 @@ func printHelp() {
 		`  -i / --init		Create hato.yml
   -a / --add		Add checkList.
   -l / --list		Show the checklist.
-  -c / --check		Check the list.
+  -c / --checklists	Show all checklist name.
 
   -h  --help	Print help information.
 		
@@ -69,12 +70,12 @@ func argCheck() ArgInfo {
 			}
 			res.Action = LIST
 			action_specified = true
-		case "-c", "--check":
+		case "-c", "--checklists":
 			if action_specified {
 				fmt.Fprintln(os.Stderr, "Multiple actions were specified. Action is only one.")
 				os.Exit(1)
 			}
-			res.Action = CHECK
+			res.Action = CHECKLISTS
 			action_specified = true
 		default:
 			if res.TargetName == "" && !action_specified {
@@ -130,8 +131,9 @@ func main() {
 		for i, c := range m.GetList() {
 			fmt.Printf("- [\033[36m%d\033[0m] %s\n", i+1, c)
 		}
+	case CHECKLISTS:
+		m.ShowAllChecklists()
 	case CHECK:
 		m.Check()
-	default:
 	}
 }
