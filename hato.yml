@@ -25,7 +25,6 @@ push:
   aliases:
     - p
   checklist:
-    - Current branch is %1?
     - Updated version?
     - README is ok?
   actions:

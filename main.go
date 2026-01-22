@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"slices"
 	"strings"
 
@@ -15,6 +16,7 @@ type ArgInfo struct {
 	Action     ActionType
 	Args       []string
 	TargetName string
+	YamlFile   string
 }
 
 const (
@@ -37,6 +39,8 @@ func printHelp() {
   -a / --add		Add checkList.
   -l / --list		Show the checklist.
   -c / --checklists	Show all checklist name.
+  -f / --file		Set the path of hato.yml you want to use.
+  -g / --global		Use ~/hato.yml
 
   -h  --help	Print help information.
 		
@@ -52,9 +56,14 @@ func argCheck() ArgInfo {
 		os.Exit(0)
 	}
 	action_specified := false
+	skip := 0
 	res := ArgInfo{}
 	res.Action = CHECK
-	for _, a := range os.Args[1:] {
+	for i, a := range os.Args[1:] {
+		if 0 < skip {
+			skip--
+			continue
+		}
 		switch a {
 		case "-a", "--add":
 			if action_specified {
@@ -77,6 +86,24 @@ func argCheck() ArgInfo {
 			}
 			res.Action = CHECKLISTS
 			action_specified = true
+		case "-f", "--file":
+			if len(os.Args) <= i+2 {
+				fmt.Fprintln(os.Stderr, "You need to set the value of -f, --file option.")
+				os.Exit(1)
+			}
+			f := os.Args[i+2]
+			if filepath.Base(f) != "hato.yml" {
+				f = filepath.Join(f, "hato.yml")
+			}
+			res.YamlFile = f
+			skip++
+		case "-g", "--global":
+			home, err := os.UserHomeDir()
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+			res.YamlFile = filepath.Join(home, "hato.yml")
 		default:
 			if res.TargetName == "" && !action_specified {
 				res.TargetName = a
@@ -88,12 +115,15 @@ func argCheck() ArgInfo {
 	if res.TargetName == "" {
 		res.TargetName = data.DEFAULT
 	}
+	if res.YamlFile == "" {
+		res.YamlFile = "hato.yml"
+	}
 	return res
 }
 
 func main() {
 	if len(os.Args) == 1 {
-		m, err := manager.CreateManager(data.DEFAULT)
+		m, err := manager.CreateManager("hato.yml", data.DEFAULT)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "`\033[33mdefault\033[0m` was not found.")
 			os.Exit(1)
@@ -102,12 +132,12 @@ func main() {
 		return
 	}
 	args := argCheck()
-	m, err := manager.CreateManager(args.TargetName)
+	m, err := manager.CreateManager(args.YamlFile, args.TargetName)
 	if err != nil {
 		if args.Action == ADD {
 			data.NewChecklist(args.TargetName)
 			fmt.Printf("\033[36mNew Checklist\033[0m: `%s`\n", args.TargetName)
-			m, err = manager.CreateManager(args.TargetName)
+			m, err = manager.CreateManager(args.YamlFile, args.TargetName)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 			}

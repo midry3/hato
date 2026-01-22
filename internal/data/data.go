@@ -9,9 +9,12 @@ import (
 )
 
 const (
-	TARGETFILE string = "hato.yml"
-	HEADER     string = "# https://github.com/midry3/hato"
-	DEFAULT    string = "default"
+	HEADER  string = "# https://github.com/midry3/hato"
+	DEFAULT string = "default"
+)
+
+var (
+	TargetFile string
 )
 
 type Data struct {
@@ -31,14 +34,15 @@ func (c *Checklists) Save() {
 		buf.Write([]byte(HEADER))
 		buf.Write([]byte("\n\n"))
 		buf.Write(b)
-		os.WriteFile(TARGETFILE, buf.Bytes(), 0655)
+		os.WriteFile(TargetFile, buf.Bytes(), 0655)
 	} else {
 		fmt.Fprintln(os.Stdout, err)
 	}
 }
 
-func LoadCheckList() Checklists {
-	f, err := os.ReadFile(TARGETFILE)
+func LoadCheckList(target string) Checklists {
+	TargetFile = target
+	f, err := os.ReadFile(TargetFile)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -53,16 +57,16 @@ func LoadCheckList() Checklists {
 }
 
 func NewChecklist(name string) {
-	ls := LoadCheckList()
+	ls := LoadCheckList(TargetFile)
 	ls[name] = &Data{}
 	ls.Save()
 }
 
 func Inilialize() {
-	if _, err := os.Stat(TARGETFILE); err == nil {
+	if _, err := os.Stat(TargetFile); err == nil {
 		fmt.Fprintln(os.Stderr, "`hato.yml` already exists.")
 	} else {
-		os.WriteFile(TARGETFILE, []byte(fmt.Sprintf(`%s
+		os.WriteFile(TargetFile, []byte(fmt.Sprintf(`%s
 
 %s:
   aliases: []
