@@ -1,12 +1,12 @@
 # hato
-This is a CLI CheckList tool.
+This is a CLI Checklist tool and task runner.
 
 # How to install
 If you have `go`:
 ```bash
 $ go install github.com/midry3/hato@latest
 ```
-s
+
 Linux, Mac:
 ```bash
 $ curl https://raw.githubusercontent.com/midry3/hato/main/install.sh | sh
@@ -22,7 +22,7 @@ or download binary from [here](https://github.com/midry3/hato/releases/latest).
 # Usage
 ```bash
 # Initialize
-$ hato
+$ hato --init
 
 # Add an item of checklist
 $ hato --add Check A
