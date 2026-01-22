@@ -35,6 +35,9 @@ $ hato test --add Test Check B
 # Check the list
 $ hato
 $ hato test
+
+# When -g, --global option selected, use ~/hato.yml
+$ hato -g
 ```
 
 Please edit `hato.yml` on current directory.
