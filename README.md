@@ -36,7 +36,7 @@ $ hato test --add Test Check B
 $ hato
 $ hato test
 
-# When -g, --global option selected, use ~/hato.yml
+# When -g, --global option was selected, use ~/hato.yml
 $ hato -g
 ```
 
