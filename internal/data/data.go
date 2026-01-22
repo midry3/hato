@@ -14,7 +14,7 @@ const (
 )
 
 var (
-	TargetFile string
+	TargetFile string = "hato.yml"
 )
 
 type Data struct {
