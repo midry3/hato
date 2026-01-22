@@ -132,8 +132,8 @@ func (m *Manager) GetList() []string {
 	return m.Data[m.Name].CheckList
 }
 
-func CreateManager(name string) (Manager, error) {
-	ls := data.LoadCheckList()
+func CreateManager(target, name string) (Manager, error) {
+	ls := data.LoadCheckList(target)
 	_, ok := ls[name]
 	if ok {
 		return Manager{
