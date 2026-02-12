@@ -141,7 +141,7 @@ func main() {
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 			}
-		} else {
+		} else if args.Action != CHECKLISTS {
 			fmt.Fprintf(os.Stderr, "Checklist `\033[33m%s\033[0m` was not found.\n", args.TargetName)
 			os.Exit(1)
 		}
