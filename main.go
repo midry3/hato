@@ -44,7 +44,7 @@ func printHelp() {
 
   -h  --help	Print help information.
 		
-If you want more information, plese visit this: https://github.com/midry3/hato`)
+If you want more information, please visit this: https://github.com/midry3/hato`)
 	os.Exit(0)
 }
 
