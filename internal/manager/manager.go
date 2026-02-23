@@ -151,6 +151,10 @@ func CreateManager(target, name string) (Manager, error) {
 				}, nil
 			}
 		}
-		return Manager{}, fmt.Errorf("Not found.\n")
+		return Manager{
+			ls,
+			"",
+			[]string{},
+		}, fmt.Errorf("Not found.\n")
 	}
 }
