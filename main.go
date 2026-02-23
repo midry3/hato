@@ -64,51 +64,64 @@ func argCheck() ArgInfo {
 			skip--
 			continue
 		}
-		switch a {
-		case "-a", "--add":
-			if action_specified {
-				fmt.Fprintln(os.Stderr, "Multiple actions were specified. Action is only one.")
-				os.Exit(1)
+		options := []string{}
+		if a[0] == '-' && a[1] != '-' {
+			for _, o := range a {
+				if o == '-' {
+					continue
+				}
+				options = append(options, fmt.Sprintf("-%c", o))
 			}
-			res.Action = ADD
-			action_specified = true
-		case "-l", "--list":
-			if action_specified {
-				fmt.Fprintln(os.Stderr, "Multiple actions were specified. Action is only one.")
-				os.Exit(1)
-			}
-			res.Action = LIST
-			action_specified = true
-		case "-c", "--checklists":
-			if action_specified {
-				fmt.Fprintln(os.Stderr, "Multiple actions were specified. Action is only one.")
-				os.Exit(1)
-			}
-			res.Action = CHECKLISTS
-			action_specified = true
-		case "-f", "--file":
-			if len(os.Args) <= i+2 {
-				fmt.Fprintln(os.Stderr, "You need to set the value of -f, --file option.")
-				os.Exit(1)
-			}
-			f := os.Args[i+2]
-			if filepath.Base(f) != "hato.yml" {
-				f = filepath.Join(f, "hato.yml")
-			}
-			res.YamlFile = f
-			skip++
-		case "-g", "--global":
-			home, err := os.UserHomeDir()
-			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				os.Exit(1)
-			}
-			res.YamlFile = filepath.Join(home, "hato.yml")
-		default:
-			if res.TargetName == "" && !action_specified {
-				res.TargetName = a
-			} else {
-				res.Args = append(res.Args, a)
+		} else {
+			options = append(options, a)
+		}
+		for _, opt := range options {
+			switch opt {
+			case "-a", "--add":
+				if action_specified {
+					fmt.Fprintln(os.Stderr, "Multiple actions were specified. Action is only one.")
+					os.Exit(1)
+				}
+				res.Action = ADD
+				action_specified = true
+			case "-l", "--list":
+				if action_specified {
+					fmt.Fprintln(os.Stderr, "Multiple actions were specified. Action is only one.")
+					os.Exit(1)
+				}
+				res.Action = LIST
+				action_specified = true
+			case "-c", "--checklists":
+				if action_specified {
+					fmt.Fprintln(os.Stderr, "Multiple actions were specified. Action is only one.")
+					os.Exit(1)
+				}
+				res.Action = CHECKLISTS
+				action_specified = true
+			case "-f", "--file":
+				if len(os.Args) <= i+2 {
+					fmt.Fprintln(os.Stderr, "You need to set the value of -f, --file option.")
+					os.Exit(1)
+				}
+				f := os.Args[i+2]
+				if filepath.Base(f) != "hato.yml" {
+					f = filepath.Join(f, "hato.yml")
+				}
+				res.YamlFile = f
+				skip++
+			case "-g", "--global":
+				home, err := os.UserHomeDir()
+				if err != nil {
+					fmt.Fprintln(os.Stderr, err)
+					os.Exit(1)
+				}
+				res.YamlFile = filepath.Join(home, "hato.yml")
+			default:
+				if res.TargetName == "" && !action_specified {
+					res.TargetName = a
+				} else {
+					res.Args = append(res.Args, a)
+				}
 			}
 		}
 	}
