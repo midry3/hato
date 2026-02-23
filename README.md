@@ -4,17 +4,17 @@ This is a CLI Checklist tool and task runner.
 # How to install
 If you have `go`:
 ```bash
-$ go install github.com/midry3/hato@latest
+go install github.com/midry3/hato@latest
 ```
 
 Linux, Mac:
 ```bash
-$ curl https://raw.githubusercontent.com/midry3/hato/main/install.sh | sh
+curl https://raw.githubusercontent.com/midry3/hato/main/install.sh | sh
 ```
 
 Windows:
 ```bat
-> winget install --id Midry.hato
+winget install --id Midry.hato
 ```
 
 or download binary from [here](https://github.com/midry3/hato/releases/latest).
