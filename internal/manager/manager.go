@@ -50,7 +50,7 @@ func (m *Manager) ShowAllChecklists() {
 		fmt.Printf("[%d] \033[33m%s\033[0m", n+1, k)
 		if 0 < len(v.Aliases) {
 			fmt.Print(", ")
-			fmt.Printf("\033[33m%s\033[0m", strings.Join(v.Aliases, ", "))
+			fmt.Printf("\033[33m%s\033[0m", strings.Join(v.Aliases, "\033[0m, \033[33m"))
 		}
 		fmt.Printf(": needs \033[36m%d\033[0m arguments.\n", v.NArgs)
 		n++
