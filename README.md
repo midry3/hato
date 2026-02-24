@@ -1,4 +1,7 @@
 # hato
+![](https://img.shields.io/github/stars/midry3/hato)
+![](https://img.shields.io/github/downloads/midry3/hato/total)
+
 This is a CLI Checklist tool and task runner.
 
 # How to install
